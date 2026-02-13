@@ -12,5 +12,6 @@ module.exports = {
   },
   collectCoverage:true,
   coverageDirectory:'coverage',
-  testTimeout:10000
+  testTimeout:10000,
+  setupFiles:['dotenv/config']
 };

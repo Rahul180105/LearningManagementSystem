@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import type {StringValue} from 'ms';
 
 interface JWTPayload {
   userId: number;
@@ -7,8 +8,12 @@ interface JWTPayload {
 }
 
 export class JWTService {
-  private readonly secret = process.env.JWT_SECRET || 'testsecret';
-  private readonly expiry = process.env.JWT_ACCESS_EXPIRY || '15m';
+  private readonly secret : jwt.Secret;
+  private readonly expiry : StringValue;
+  constructor(){
+    this.secret=process.env.JWT_SECRET!;
+    this.expiry=process.env.JWT_ACCESS_EXPIRY as StringValue;
+  }
 
   generateAccessToken(payload: JWTPayload): string {
     return jwt.sign(payload, this.secret, {
