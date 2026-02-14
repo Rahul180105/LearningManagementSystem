@@ -3,6 +3,7 @@ import { Role } from "./role.model";
 import { Permission } from "./permission.model";
 import { UserRole } from "./userRole.models";
 import { RolePermission } from "./rolePermission.model";
+import { RefreshToken } from "./refreshToken.model";
 
 //connectiond
 User.belongsToMany(Role,{
@@ -14,7 +15,7 @@ Role.belongsToMany(User,{
     foreignKey:'role_id'
 });
 
-Role.belongsToMany(Role,{
+Role.belongsToMany(Permission,{
     through:RolePermission,
     foreignKey:'role_id'
 });
@@ -23,5 +24,12 @@ Permission.belongsToMany(Role,{
     foreignKey:'permission_id',
 });
 
-export {User,Role,Permission};
+User.hasMany(RefreshToken,{
+    foreignKey:'user_id',
+});
+RefreshToken.belongsTo(User,{
+    foreignKey:'user_id'
+});
+
+export {User,Role,Permission,UserRole,RefreshToken};
 

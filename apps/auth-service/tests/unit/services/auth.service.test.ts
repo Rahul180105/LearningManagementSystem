@@ -1,9 +1,25 @@
 import { AuthService } from '../../../src/services/auth.service';
 import { PasswordService } from '../../../src/services/password.service';
 import { JWTService } from '../../../src/services/jwt.service';
+import { sequelize } from '../../../src/config/database.config';
+import { Role } from '../../../src/models';
+import '../../../src/models';
 
 describe('AuthService', () => {
   let authService: AuthService;
+
+  beforeAll(async () => {
+    await sequelize.sync({ force: true });
+
+    // Seed default role
+    await Role.create({
+      name: 'employee',
+    });
+  });
+
+  afterAll(async () => {
+    await sequelize.close();
+  });
 
   beforeEach(() => {
     authService = new AuthService(
@@ -12,25 +28,93 @@ describe('AuthService', () => {
     );
   });
 
-  it('should throw error if user not found', async () => {
-    await expect(
-      authService.login('notfound@test.com', 'password')
-    ).rejects.toThrow('User not found');
+  // ✅ SUCCESS CASES
+
+  it('should register user successfully', async () => {
+    const user = await authService.register({
+      email: 'test@test.com',
+      username: 'testuser',
+      password: 'SecurePass123!',
+      first_name: 'Test',
+      last_name: 'User',
+      department: 'Engineering',
+    });
+
+    expect(user.email).toBe('test@test.com');
   });
 
-  it('should throw error if password is incorrect', async () => {
-    await expect(
-      authService.login('test@test.com', 'WrongPassword')
-    ).rejects.toThrow('Invalid credentials');
-  });
+  it('should login successfully after register', async () => {
+    await authService.register({
+      email: 'login@test.com',
+      username: 'loginuser',
+      password: 'SecurePass123!',
+      first_name: 'Login',
+      last_name: 'User',
+      department: 'Engineering',
+    });
 
-  it('should return access token for valid login', async () => {
     const result = await authService.login(
-      'test@test.com',
+      'login@test.com',
       'SecurePass123!'
     );
 
     expect(result.accessToken).toBeDefined();
-    expect(typeof result.accessToken).toBe('string');
+  });
+
+  // ❌ NEGATIVE CASES
+
+  it('should throw error if user already exists', async () => {
+    await authService.register({
+      email: 'duplicate@test.com',
+      username: 'dupuser',
+      password: 'SecurePass123!',
+      first_name: 'Dup',
+      last_name: 'User',
+    });
+
+    await expect(
+      authService.register({
+        email: 'duplicate@test.com',
+        username: 'dupuser2',
+        password: 'SecurePass123!',
+        first_name: 'Dup',
+        last_name: 'User',
+      })
+    ).rejects.toThrow('User already exists');
+  });
+
+  it('should throw error if user not found during login', async () => {
+    await expect(
+      authService.login('unknown@test.com', 'password')
+    ).rejects.toThrow('User not found');
+  });
+
+  it('should throw error for invalid password', async () => {
+    await authService.register({
+      email: 'wrongpass@test.com',
+      username: 'wrongpassuser',
+      password: 'SecurePass123!',
+      first_name: 'Wrong',
+      last_name: 'Pass',
+    });
+
+    await expect(
+      authService.login('wrongpass@test.com', 'WrongPassword')
+    ).rejects.toThrow('Invalid credentials');
+  });
+
+  it('should throw error if default role not found', async () => {
+    // Remove roles
+    await Role.destroy({ where: {} });
+
+    await expect(
+      authService.register({
+        email: 'norole@test.com',
+        username: 'noroleuser',
+        password: 'SecurePass123!',
+        first_name: 'No',
+        last_name: 'Role',
+      })
+    ).rejects.toThrow('Default role not found');
   });
 });

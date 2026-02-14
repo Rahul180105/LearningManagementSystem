@@ -1,5 +1,7 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model}from 'sequelize';
+import type{BelongsToManyAddAssociationMixin,BelongsToManyGetAssociationsMixin} from 'sequelize';
 import { sequelize } from '../config/database.config';
+import type { Role } from './role.model';
 
 export class User extends Model {
   public id!: number;
@@ -11,6 +13,9 @@ export class User extends Model {
   public department!: string;
   public status!: string;
   public last_login_at!: Date;
+
+  public addRole!:BelongsToManyAddAssociationMixin<Role,number>;
+  public getRole!:BelongsToManyGetAssociationsMixin<Role>;
 }
 
 User.init(
