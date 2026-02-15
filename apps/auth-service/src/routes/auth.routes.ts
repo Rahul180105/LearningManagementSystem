@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { AuthController } from '../controllers/auth.controller';
 import { authenticate } from '../middleware/auth.middleware';
+import { validate } from '../middleware/validation.middleware';
+import { registerSchema,loginSchema,refreshSchema } from '../validators/auth.validator';
 
 const router = Router();
 const controller = new AuthController();
@@ -28,7 +30,7 @@ const controller = new AuthController();
  *       201:
  *         description: User registered successfully
  */
-router.post('/register', controller.register);
+router.post('/register', validate(registerSchema),controller.register);
 
 /**
  * @swagger
@@ -46,7 +48,7 @@ router.post('/register', controller.register);
  *       200:
  *         description: Login successful
  */
-router.post('/login', controller.login);
+router.post('/login',validate(loginSchema),controller.login);
 
 /**
  * @swagger
@@ -70,7 +72,7 @@ router.post('/login', controller.login);
  *       200:
  *         description: New access token generated
  */
-router.post('/refresh', controller.refresh);
+router.post('/refresh',validate(refreshSchema), controller.refresh);
 
 /**
  * @swagger
