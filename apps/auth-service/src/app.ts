@@ -3,10 +3,13 @@ import dotenv from 'dotenv';
 import { swaggerSpec } from './config/swagger.config';
 import swaggerUi from 'swagger-ui-express';
 import authRoutes from './routes/auth.routes';
+import cors from 'cors';
+
 
 dotenv.config();
 
 const app =express();
+app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth',authRoutes);

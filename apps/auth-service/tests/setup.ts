@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import '../src/models';
+import '@lms/shared-db';
 
 dotenv.config({ path: '.env.test' });
 

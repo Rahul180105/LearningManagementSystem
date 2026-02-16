@@ -1,4 +1,4 @@
-import {Sequelize} from 'sequelize';
+import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 
 if(process.env.NODE_ENV === 'test'){
@@ -16,6 +16,10 @@ export const sequelize=new Sequelize(
         port:Number(process.env.DB_PORT),
         dialect:'postgres',
         logging:false,
+        define:{
+            underscored:true,
+            timestamps:true
+        }
     }
 );
 

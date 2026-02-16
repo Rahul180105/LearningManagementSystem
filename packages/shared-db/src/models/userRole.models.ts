@@ -1,5 +1,5 @@
 import { DataTypes,Model } from "sequelize";
-import { sequelize } from "../config/database.config";
+import { sequelize } from "../database";
 
 export class UserRole extends Model {}
 

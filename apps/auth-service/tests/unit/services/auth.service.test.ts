@@ -1,9 +1,8 @@
 import { AuthService } from '../../../src/services/auth.service';
 import { PasswordService } from '../../../src/services/password.service';
 import { JWTService } from '../../../src/services/jwt.service';
-import { sequelize } from '../../../src/config/database.config';
-import { Role } from '../../../src/models';
-import '../../../src/models';
+import { sequelize,Role } from '@lms/shared-db';
+import '@lms/shared-db';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -11,7 +10,7 @@ describe('AuthService', () => {
   beforeAll(async () => {
     await sequelize.sync({ force: true });
 
-    // Seed default role
+   
     await Role.create({
       name: 'employee',
     });
@@ -28,7 +27,7 @@ describe('AuthService', () => {
     );
   });
 
-  // ✅ SUCCESS CASES
+
 
   it('should register user successfully', async () => {
     const user = await authService.register({

@@ -1,7 +1,8 @@
 import { PasswordService } from './password.service';
 import { JWTService } from './jwt.service';
-import { User, Role } from '../models';
-import { RefreshToken } from '../models';
+import { User, Role, sequelize } from '@lms/shared-db';
+import { RefreshToken } from '@lms/shared-db';
+
 
 
 interface RegisterInput {
@@ -38,7 +39,7 @@ export class AuthService {
       password_hash: hashedPassword,
       first_name: data.first_name,
       last_name: data.last_name,
-      department: data.department,
+      department: data.department??'',
     });
 
     const role = await Role.findOne({
@@ -50,7 +51,6 @@ export class AuthService {
     }
 
     await user.addRole(role);
-
     return user;
   }
 

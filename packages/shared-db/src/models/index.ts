@@ -4,24 +4,29 @@ import { Permission } from "./permission.model";
 import { UserRole } from "./userRole.models";
 import { RolePermission } from "./rolePermission.model";
 import { RefreshToken } from "./refreshToken.model";
+import { sequelize } from "../database";
 
-//connectiond
+
 User.belongsToMany(Role,{
     through:UserRole,
     foreignKey:'user_id',
+    otherKey:'role_id'
 });
 Role.belongsToMany(User,{
     through:UserRole,
-    foreignKey:'role_id'
+    foreignKey:'role_id',
+    otherKey:'user_id'
 });
 
 Role.belongsToMany(Permission,{
     through:RolePermission,
-    foreignKey:'role_id'
+    foreignKey:'role_id',
+    otherKey:'permission_id'
 });
 Permission.belongsToMany(Role,{
     through:RolePermission,
     foreignKey:'permission_id',
+    otherKey:'role_id'
 });
 
 User.hasMany(RefreshToken,{
@@ -31,5 +36,5 @@ RefreshToken.belongsTo(User,{
     foreignKey:'user_id'
 });
 
-export {User,Role,Permission,UserRole,RefreshToken};
+export {sequelize,User,Role,Permission,UserRole,RefreshToken,RolePermission};
 
