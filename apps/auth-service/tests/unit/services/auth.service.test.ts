@@ -60,7 +60,7 @@ describe('AuthService', () => {
     expect(result.accessToken).toBeDefined();
   });
 
-  // ❌ NEGATIVE CASES
+ 
 
   it('should throw error if user already exists', async () => {
     await authService.register({

@@ -1,5 +1,6 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+import { BelongsToManyAddAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyRemoveAssociationMixin, DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../database';
+import { Permission } from './permission.model';
 
 interface RoleAttributes {
   id: number;
@@ -21,6 +22,10 @@ export class Role
   declare description?: string;
   declare readonly createdAt?: Date;
   declare readonly updatedAt?: Date;
+
+  declare addPermission:BelongsToManyAddAssociationMixin<Permission,number>;
+  declare removePermission:BelongsToManyRemoveAssociationMixin<Permission,number>;
+  declare getPermission:BelongsToManyGetAssociationsMixin<Permission>;
 }
 
 Role.init(
