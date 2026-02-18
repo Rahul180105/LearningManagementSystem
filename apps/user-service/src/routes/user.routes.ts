@@ -15,7 +15,7 @@ const controller = new UserController();
 
 /**
  * @swagger
- * /api/users:
+ * /users:
  *   get:
  *     summary: Get all users (Admin only)
  *     tags: [Users]
@@ -34,7 +34,7 @@ router.get(
 
 /**
  * @swagger
- * /api/users/{id}:
+ * /users/{id}:
  *   get:
  *     summary: Get user by ID
  *     tags: [Users]
@@ -49,7 +49,7 @@ router.get(
 
 /**
  * @swagger
- * /api/users/{id}:
+ * /users/{id}:
  *   put:
  *     summary: Update user (Admin or Self)
  *     tags: [Users]
@@ -64,7 +64,7 @@ router.put(
 
 /**
  * @swagger
- * /api/users/{id}:
+ * /users/{id}:
  *   delete:
  *     summary: Soft delete user (Admin only)
  *     tags: [Users]
@@ -80,7 +80,7 @@ router.delete(
 
 /**
  * @swagger
- * /api/users/{id}/roles:
+ * /users/{id}/roles:
  *   post:
  *     summary: Assign role to user (Admin only)
  *     tags: [Users]
@@ -96,7 +96,7 @@ router.post(
 
 /**
  * @swagger
- * /api/users/{id}/roles/{roleId}:
+ * /users/{id}/roles/{roleId}:
  *   delete:
  *     summary: Remove role from user (Admin only)
  *     tags: [Users]

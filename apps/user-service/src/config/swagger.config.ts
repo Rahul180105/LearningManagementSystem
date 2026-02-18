@@ -21,24 +21,6 @@ const options: Options = {
           scheme: 'bearer',
           bearerFormat: 'JWT'
         }
-      },
-      schemas: {
-        UpdateUserRequest: {
-          type: 'object',
-          properties: {
-            first_name: { type: 'string' },
-            last_name: { type: 'string' },
-            department: { type: 'string' },
-            status: { type: 'string', enum: ['active', 'inactive'] }
-          }
-        },
-        AssignRoleRequest: {
-          type: 'object',
-          required: ['roleId'],
-          properties: {
-            roleId: { type: 'number' }
-          }
-        }
       }
     }
   },
