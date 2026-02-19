@@ -1,27 +1,64 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/auth.context";
 
-const Login=()=>{
-    const [isRegister,setIsRegister] = useState(false);
-    return (
-        <div className='bg-white/20 backdrop-blur-lg shadow-2xl rounded-xl p-8 text-white'>
-            <h2 className='text-2xl font-bold text-center mb-6'>
-                {isRegister?'Register':'Login'}
-            </h2>
-            <div className='space-y-4'>
-                <input type='email' placeholder='Email' className='w-full p-3 rounded bg-white/30 placeholder-white outline-none'/>
-                <input type='password' placeholder='Password' className='w-full p-3 rounded bg-white/30 placeholder-white outline-none'/>
-                <button className='w-gull bg-white-600 hover:bg-blue-700 transition rounded p-3 font-semibold'>
-                    {isRegister?'Create Account':'Login'}
-                </button>
-            </div>
-            <p className='mt-4 text-center text-sm'>
-                {isRegister?'Already have an account?':'Do not have an account'}
-                <span className='ml-2 underline cursor-pointer' onClick={()=>setIsRegister(!isRegister)}>
-                    {isRegister?'Login':'Register'}
-                </span>
-            </p>
-        </div>
-    )
+export default function Login() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      await login(email, password);
+      navigate("/dashboard");
+    } catch (err) {
+      setError("Invalid credentials");
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-8 rounded shadow w-96"
+      >
+        <h2 className="text-2xl mb-4">Login</h2>
+
+        {error && (
+          <div className="text-red-500 mb-3 text-sm">
+            {error}
+          </div>
+        )}
+
+        <input
+          type="email"
+          placeholder="Email"
+          className="w-full p-2 border mb-3"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          className="w-full p-2 border mb-3"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white p-2"
+        >
+          Login
+        </button>
+      </form>
+    </div>
+  );
 }
-export default Login;

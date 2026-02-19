@@ -9,7 +9,12 @@ import cors from 'cors';
 dotenv.config();
 
 const app =express();
-app.use(cors());
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true,
+    methods:['GET','PUT','POST','DELETE'],
+}))
+
 app.use(express.json());
 
 app.use('/api/auth',authRoutes);
@@ -17,5 +22,9 @@ app.use('/docs',swaggerUi.serve,swaggerUi.setup(swaggerSpec))
 app.get('/health',(_req,res)=>{
     res.status(200).json({status:'ok'});
 });
+
+
+
+
 
 export default app;
