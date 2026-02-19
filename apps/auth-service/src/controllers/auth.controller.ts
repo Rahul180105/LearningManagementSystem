@@ -5,7 +5,7 @@ const authService = new AuthService();
 
 export class AuthController {
 
-  // 🔹 Register
+
   async register(req: Request, res: Response) {
     try {
       const user = await authService.register(req.body);
@@ -22,7 +22,7 @@ export class AuthController {
     }
   }
 
-  // 🔹 Login
+
   async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
@@ -31,7 +31,7 @@ export class AuthController {
 
       res.status(200).json({
         success: true,
-        ...result, // accessToken + refreshToken
+        ...result,
       });
     } catch (error: any) {
       res.status(401).json({
@@ -41,7 +41,7 @@ export class AuthController {
     }
   }
 
-  // 🔹 Refresh Access Token
+
   async refresh(req: Request, res: Response) {
     try {
       const { refreshToken } = req.body;
@@ -57,7 +57,7 @@ export class AuthController {
 
       res.status(200).json({
         success: true,
-        ...result, // new accessToken
+        ...result,
       });
     } catch (error: any) {
       res.status(401).json({
@@ -67,7 +67,7 @@ export class AuthController {
     }
   }
 
-  // 🔹 Logout (Revoke Refresh Token)
+
   async logout(req: Request, res: Response) {
     try {
       const { refreshToken } = req.body;
@@ -93,7 +93,7 @@ export class AuthController {
     }
   }
 
-  // 🔹 Current User
+
   async me(req: Request, res: Response) {
     res.status(200).json({
       success: true,
