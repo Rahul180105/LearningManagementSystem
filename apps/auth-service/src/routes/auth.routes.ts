@@ -111,5 +111,7 @@ router.get('/me', authenticate, controller.me);
  *         description: Logout successful
  */
 router.post('/logout', controller.logout);
+router.post('/forgot-password',controller.forgotPassword);
+router.post('/reset-password',controller.resetPassword);
 
 export default router;

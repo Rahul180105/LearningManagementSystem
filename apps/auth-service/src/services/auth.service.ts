@@ -2,7 +2,9 @@ import { PasswordService } from './password.service';
 import { JWTService } from './jwt.service';
 import { User, Role, sequelize } from '@lms/shared-db';
 import { RefreshToken } from '@lms/shared-db';
-
+import crypto from 'crypto';
+import { PasswordResetToken } from '@lms/shared-db';
+import { transporter } from '../utils/mailer';
 
 
 interface RegisterInput {
@@ -140,5 +142,81 @@ async logout(token: string) {
   await storedToken.save();
 
   return { message: 'Logged out successfully' };
+}
+
+async forgotPassword(email: string) {
+  const user = await User.findOne({ where: { email } });
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  // Generate random token
+  const rawToken = crypto.randomBytes(32).toString('hex');
+
+  // Hash token before storing
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(rawToken)
+    .digest('hex');
+
+  const expiryMinutes = Number(process.env.RESET_PASSWORD_EXPIRY_MINUTES) || 15;
+
+  await PasswordResetToken.create({
+    user_id: user.id,
+    token: hashedToken,
+    expires_at: new Date(Date.now() + expiryMinutes * 60 * 1000),
+  });
+
+  const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${rawToken}`;
+
+  await transporter.sendMail({
+    to: user.email,
+    subject: 'Password Reset',
+    html: `
+      <h3>Password Reset Request</h3>
+      <p>Click below to reset your password:</p>
+      <a href="${resetLink}">${resetLink}</a>
+    `,
+  });
+
+  return { message: 'Reset link sent to email' };
+}
+async resetPassword(token: string, newPassword: string) {
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(token)
+    .digest('hex');
+
+  const resetEntry = await PasswordResetToken.findOne({
+    where: {
+      token: hashedToken,
+      used: false,
+    },
+  });
+
+  if (!resetEntry) {
+    throw new Error('Invalid or expired token');
+  }
+
+  if (resetEntry.expires_at < new Date()) {
+    throw new Error('Token expired');
+  }
+
+  const user = await User.findByPk(resetEntry.user_id);
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  const hashedPassword = await this.passwordService.hashPassword(newPassword);
+
+  user.password_hash = hashedPassword;
+  await user.save();
+
+  resetEntry.used = true;
+  await resetEntry.save();
+
+  return { message: 'Password reset successful' };
 }
 }
