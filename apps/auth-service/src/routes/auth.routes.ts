@@ -111,7 +111,75 @@ router.get('/me', authenticate, controller.me);
  *         description: Logout successful
  */
 router.post('/logout', controller.logout);
-router.post('/forgot-password',controller.forgotPassword);
-router.post('/reset-password',controller.resetPassword);
+/**
+ * @swagger
+ * /auth/forgot-password:
+ *   post:
+ *     summary: Send password reset link to email
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: john@example.com
+ *     responses:
+ *       200:
+ *         description: Reset link sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Reset link sent to email
+ *       404:
+ *         description: User not found
+ */
+router.post('/forgot-password', controller.forgotPassword);
+/**
+ * @swagger
+ * /auth/reset-password:
+ *   post:
+ *     summary: Reset password using reset token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - token
+ *               - newPassword
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 example: reset-token-from-email
+ *               newPassword:
+ *                 type: string
+ *                 example: NewSecurePass123!
+ *     responses:
+ *       200:
+ *         description: Password reset successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Password reset successful
+ *       400:
+ *         description: Invalid or expired token
+ */
+router.post('/reset-password', controller.resetPassword);
 
 export default router;
