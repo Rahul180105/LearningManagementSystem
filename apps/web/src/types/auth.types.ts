@@ -2,6 +2,10 @@ export interface LoginResponse{
     accessToken:string;
     refreshToken:string;
 }
+export interface LoginRequest{
+    email:string;
+    password:string;
+}
 
 export interface RegisterRequest{
     email:string;
@@ -37,4 +41,15 @@ export interface CurrentUser{
     first_name:string;
     last_name:string;
     roles:string[];
+}
+export interface CurrentUserResponse{
+    user:CurrentUser;
+}
+
+export interface ForgotPasswordRequest{
+    email:string;
+}
+export interface ResetPasswordRequest{
+    token:string;
+    newPassword:string;
 }
