@@ -113,9 +113,9 @@ router.get('/me', authenticate, controller.me);
 router.post('/logout', controller.logout);
 /**
  * @swagger
- * /auth/forgot-password:
+ * /api/auth/forgot-password:
  *   post:
- *     summary: Send password reset link to email
+ *     summary: Send OTP to user's email for password reset
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -131,7 +131,7 @@ router.post('/logout', controller.logout);
  *                 example: john@example.com
  *     responses:
  *       200:
- *         description: Reset link sent successfully
+ *         description: OTP sent successfully
  *         content:
  *           application/json:
  *             schema:
@@ -139,16 +139,16 @@ router.post('/logout', controller.logout);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Reset link sent to email
+ *                   example: OTP sent to email
  *       404:
  *         description: User not found
  */
 router.post('/forgot-password', controller.forgotPassword);
 /**
  * @swagger
- * /auth/reset-password:
+ * /api/auth/reset-password:
  *   post:
- *     summary: Reset password using reset token
+ *     summary: Reset password using OTP
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -157,13 +157,17 @@ router.post('/forgot-password', controller.forgotPassword);
  *           schema:
  *             type: object
  *             required:
- *               - token
- *               - newPassword
+ *               - email
+ *               - otp
+ *               - password
  *             properties:
- *               token:
+ *               email:
  *                 type: string
- *                 example: reset-token-from-email
- *               newPassword:
+ *                 example: john@example.com
+ *               otp:
+ *                 type: string
+ *                 example: "123456"
+ *               password:
  *                 type: string
  *                 example: NewSecurePass123!
  *     responses:
@@ -178,7 +182,7 @@ router.post('/forgot-password', controller.forgotPassword);
  *                   type: string
  *                   example: Password reset successful
  *       400:
- *         description: Invalid or expired token
+ *         description: Invalid or expired OTP
  */
 router.post('/reset-password', controller.resetPassword);
 

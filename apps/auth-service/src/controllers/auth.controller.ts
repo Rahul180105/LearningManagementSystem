@@ -100,6 +100,26 @@ export class AuthController {
       user: req.user,
     });
   }
+// async forgotPassword(req: Request, res: Response) {
+//   try {
+//     const { email } = req.body;
+//     const result = await authService.forgotPassword(email);
+//     res.json(result);
+//   } catch (error: any) {
+//     res.status(400).json({ error: error.message });
+//   }
+// }
+
+// async resetPassword(req: Request, res: Response) {
+//   try {
+//     const { token, newPassword } = req.body;
+//     const result = await authService.resetPassword(token, newPassword);
+//     res.json(result);
+//   } catch (error: any) {
+//     res.status(400).json({ error: error.message });
+//   }
+// }
+
 async forgotPassword(req: Request, res: Response) {
   try {
     const { email } = req.body;
@@ -112,8 +132,8 @@ async forgotPassword(req: Request, res: Response) {
 
 async resetPassword(req: Request, res: Response) {
   try {
-    const { token, newPassword } = req.body;
-    const result = await authService.resetPassword(token, newPassword);
+    const { email, otp, password } = req.body;
+    const result = await authService.resetPassword(email, otp, password);
     res.json(result);
   } catch (error: any) {
     res.status(400).json({ error: error.message });

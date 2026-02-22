@@ -24,21 +24,19 @@ export class JWTService {
     this.refreshExpiry = process.env.JWT_REFRESH_EXPIRY as StringValue;
   }
 
-  // 🔐 Generate Access Token
+
   generateAccessToken(payload: AccessPayload): string {
     return jwt.sign(payload, this.accessSecret, {
       expiresIn: this.accessExpiry,
     });
   }
 
-  // 🔁 Generate Refresh Token
   generateRefreshToken(userId: number): string {
     return jwt.sign({ userId }, this.refreshSecret, {
       expiresIn: this.refreshExpiry,
     });
   }
 
-  // ✅ Verify Access Token
   verifyAccessToken(token: string): AccessPayload {
     try {
       return jwt.verify(token, this.accessSecret) as AccessPayload;
@@ -47,7 +45,7 @@ export class JWTService {
     }
   }
 
-  // ✅ Verify Refresh Token
+
   verifyRefreshToken(token: string): RefreshPayload {
     try {
       return jwt.verify(token, this.refreshSecret) as RefreshPayload;
