@@ -1,19 +1,49 @@
-import request from "supertest";
-import app from "../src/app";
+import { createCourseService, getAllCourses } from "../src/services/course.service"
+import { Course } from "@lms/shared-db"
+
+jest.mock("@lms/shared-db", () => ({
+  Course: {
+    create: jest.fn(),
+    findAll: jest.fn(),
+    findByPk: jest.fn()
+  }
+}))
 
 describe("Course Service", () => {
-  it("GET /health should return service status", async () => {
-    const res = await request(app).get("/health");
 
-    expect(res.status).toBe(200);
-    expect(res.body.status).toBe("ok");
-  });
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
 
-  it("GET /api/courses should return empty list", async () => {
-    const res = await request(app).get("/api/courses");
+  it("should create a course", async () => {
+    const mockCourse = {
+      id: 1,
+      code: "REACT-101",
+      title: "React Basics"
+    }
 
-    expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty("courses");
-    expect(res.body).toHaveProperty("total");
-  });
-});
+    ;(Course.create as jest.Mock).mockResolvedValue(mockCourse)
+
+    const result = await createCourseService({
+      code: "REACT-101",
+      title: "React Basics",
+      difficulty: "beginner",
+      estimatedHours: 40
+    })
+
+    expect(Course.create).toHaveBeenCalledTimes(1)
+    expect(result).toEqual(mockCourse)
+  })
+
+  it("should return all courses", async () => {
+    const mockCourses = [{ id: 1 }, { id: 2 }]
+
+    ;(Course.findAll as jest.Mock).mockResolvedValue(mockCourses)
+
+    const result = await getAllCourses()
+
+    expect(Course.findAll).toHaveBeenCalledTimes(1)
+    expect(result).toEqual(mockCourses)
+  })
+
+})
