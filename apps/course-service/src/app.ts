@@ -14,7 +14,6 @@ app.get('/health',(_req,res)=>{
     res.status(200).json({status:"ok",service:"course-service"});
 })
 app.use("/api/courses",courseRoutes);
-app.use(errorHandler);
 
 export default app;
 
