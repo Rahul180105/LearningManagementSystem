@@ -6,6 +6,7 @@ import { RolePermission } from "./rolePermission.model";
 import { RefreshToken } from "./refreshToken.model";
 import { sequelize } from "../database";
 import { PasswordResetToken } from "./passwordResetToken.model";
+import { Course } from "./course.model";
 export * from './passwordResetToken.model';
 
 
@@ -41,5 +42,5 @@ RefreshToken.belongsTo(User,{
 User.hasMany(PasswordResetToken,{foreignKey:'user_id'});
 PasswordResetToken.belongsTo(User,{foreignKey:'user_id'});
 
-export {sequelize,User,Role,Permission,UserRole,RefreshToken,RolePermission};
+export {sequelize,User,Role,Permission,UserRole,RefreshToken,RolePermission,Course};
 

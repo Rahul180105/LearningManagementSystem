@@ -15,7 +15,7 @@ interface CourseAttributes{
 
 interface CourseCreationAttributes extends Optional<CourseAttributes,"id"|"description">{}
 
-class Course extends Model<CourseAttributes,CourseCreationAttributes>
+export class Course extends Model<CourseAttributes,CourseCreationAttributes>
 implements CourseAttributes{
     public id!:number
     public code!:string
@@ -63,4 +63,3 @@ Course.init({
     timestamps:true
 }
 )
-export default Course

@@ -184,6 +184,9 @@ importers:
         specifier: ^6.37.7
         version: 6.37.7(pg-hstore@2.3.4)(pg@8.18.0)
     devDependencies:
+      '@lms/shared-db':
+        specifier: workspace:*
+        version: link:../../packages/shared-db
       '@types/cors':
         specifier: ^2.8.19
         version: 2.8.19
