@@ -1,22 +1,40 @@
-
-FROM node:20-alpine
-
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-RUN corepack enable
-RUN npm install -g pnpm
+RUN corepack enable && corepack prepare pnpm@10.29.3 --activate
 
-COPY ./apps/auth-service/package.json ./
-COPY ./packages/shared-db ./
-COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 
-RUN pnpm install
-COPY . .
+COPY pnpm-workspace.yaml .
+COPY package.json .
+COPY pnpm-lock.yaml .
 
-RUN pnpm build
+
+COPY apps ./apps
+COPY packages ./packages
+
+RUN pnpm install --frozen-lockfile
+
+
+RUN pnpm --filter @lms/shared-db build
+
+
+RUN pnpm --filter apps/auth-service build
+
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+RUN corepack enable && corepack prepare pnpm@10.29.3 --activate
+
+COPY --from=builder /app .
+
+
+RUN pnpm install --prod --frozen-lockfile
+
+WORKDIR /app/apps/auth-service
 
 EXPOSE 3001
 
-
-CMD ["pnpm", "start"]
+CMD ["node", "dist/index.js"]

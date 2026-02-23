@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "@/components/sidebar/Sidebar";
 import Navbar from "@/components/navbar/Navbar";
+import ProfileDropdown from "@/components/ProfileDropdown";
 
 export default function DashboardLayout(){
     return (

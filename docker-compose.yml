@@ -1,28 +1,64 @@
-version: '3.8'
+version: "3.9"
 
 services:
   postgres:
     image: postgres:15
-    container_name: lms-postgres
+    container_name: lms_postgres
     restart: always
     environment:
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: lms_db
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   auth-service:
-      build:
-        context: .
-        dockerfile: ./apps/auth-service/Dockerfile
-      container_name: lms-auth
-      ports:
-        - "3001:3001"
-      env_file:
-        - ./apps/auth-service/.env
-      depends_on:
-        - postgres
+    build:
+      context: .
+      dockerfile: apps/auth-service/Dockerfile
+    container_name: lms_auth
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: lms_user
+      DB_PASSWORD: lms_password
+      DB_NAME: lms_db
+      JWT_SECRET: supersecret
+    depends_on:
+      - postgres
+
+  user-service:
+    build:
+      context: .
+      dockerfile: apps/user-service/Dockerfile
+    container_name: lms_user
+    restart: always
+    ports:
+      - "3002:3002"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: lms_user
+      DB_PASSWORD: lms_password
+      DB_NAME: lms_db
+    depends_on:
+      - postgres
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: lms_web
+    restart: always
+    ports:
+      - "5173:80"
+    depends_on:
+      - auth-service
+      - user-service
 
 volumes:
   postgres_data:
