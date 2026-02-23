@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import courseRoutes from './routes/course.routes.ts';
 import {errorHandler} from './middlewares/error.middleware.ts';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 
 dotenv.config();
 const app = express();

@@ -15,6 +15,7 @@
     "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
     "noEmit": true,
+    "esModuleInterop": true,
 
     // Other Outputs
     "sourceMap": true,
