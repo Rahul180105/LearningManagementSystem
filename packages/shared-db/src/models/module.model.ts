@@ -1,19 +1,34 @@
 import { DataTypes, Model, Optional } from "sequelize"
 import { sequelize } from "../database"
 
+export enum ModuleType {
+  ONLINE = "online",
+  OFFLINE = "offline",
+}
+
 interface ModuleAttributes {
   id: number
   courseId: number
   title: string
   description?: string
-  moduleType: "online" | "offline"
-  contentType?: "video" | "document" | "link"
-  contentUrl?: string
   sequenceOrder: number
+  moduleType: ModuleType
+
+  contentType?: string
+  contentUrl?: string
+  contentMetadata?: object
   estimatedMinutes?: number
-  isMandatory: boolean
+
   sessionDate?: Date
+  sessionStartTime?: string
+  sessionEndTime?: string
   location?: string
+  virtualMeetingUrl?: string
+  maxCapacity?: number
+
+  isMandatory?: boolean
+  prerequisites?: object
+
   createdAt?: Date
   updatedAt?: Date
 }
@@ -21,25 +36,52 @@ interface ModuleAttributes {
 interface ModuleCreationAttributes
   extends Optional<
     ModuleAttributes,
-    "id" | "description" | "contentType" | "contentUrl" | "estimatedMinutes" | "sessionDate" | "location"
+    | "id"
+    | "description"
+    | "contentType"
+    | "contentUrl"
+    | "contentMetadata"
+    | "estimatedMinutes"
+    | "sessionDate"
+    | "sessionStartTime"
+    | "sessionEndTime"
+    | "location"
+    | "virtualMeetingUrl"
+    | "maxCapacity"
+    | "isMandatory"
+    | "prerequisites"
+    | "createdAt"
+    | "updatedAt"
   > {}
 
 export class Module
   extends Model<ModuleAttributes, ModuleCreationAttributes>
   implements ModuleAttributes
 {
-  public id!: number
-  public courseId!: number
-  public title!: string
-  public description?: string
-  public moduleType!: "online" | "offline"
-  public contentType?: "video" | "document" | "link"
-  public contentUrl?: string
-  public sequenceOrder!: number
-  public estimatedMinutes?: number
-  public isMandatory!: boolean
-  public sessionDate?: Date
-  public location?: string
+  declare id: number
+  declare courseId: number
+  declare title: string
+  declare description?: string
+  declare sequenceOrder: number
+  declare moduleType: ModuleType
+
+  declare contentType?: string
+  declare contentUrl?: string
+  declare contentMetadata?: object
+  declare estimatedMinutes?: number
+
+  declare sessionDate?: Date
+  declare sessionStartTime?: string
+  declare sessionEndTime?: string
+  declare location?: string
+  declare virtualMeetingUrl?: string
+  declare maxCapacity?: number
+
+  declare isMandatory?: boolean
+  declare prerequisites?: object
+
+  declare readonly createdAt?: Date
+  declare readonly updatedAt?: Date
 }
 
 Module.init(
@@ -47,51 +89,110 @@ Module.init(
     id: {
       type: DataTypes.BIGINT,
       autoIncrement: true,
-      primaryKey: true
+      primaryKey: true,
     },
+
     courseId: {
       type: DataTypes.BIGINT,
-      allowNull: false
+      allowNull: false,
+      field: "course_id",
     },
+
     title: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
+
     description: {
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
     },
-    moduleType: {
-      type: DataTypes.ENUM("online", "offline"),
-      allowNull: false
-    },
-    contentType: {
-      type: DataTypes.ENUM("video", "document", "link")
-    },
-    contentUrl: {
-      type: DataTypes.STRING
-    },
+
     sequenceOrder: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      field: "sequence_order",
     },
+
+    moduleType: {
+      type: DataTypes.ENUM(
+        ModuleType.ONLINE,
+        ModuleType.OFFLINE
+      ),
+      allowNull: false,
+      field: "module_type",
+    },
+
+    contentType: {
+      type: DataTypes.STRING,
+      field: "content_type",
+    },
+
+    contentUrl: {
+      type: DataTypes.TEXT,
+      field: "content_url",
+    },
+
+    contentMetadata: {
+      type: DataTypes.JSON,
+      field: "content_metadata",
+    },
+
     estimatedMinutes: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      field: "estimated_minutes",
     },
+
+    sessionDate: {
+      type: DataTypes.DATEONLY,
+      field: "session_date",
+    },
+
+    sessionStartTime: {
+      type: DataTypes.TIME,
+      field: "session_start_time",
+    },
+
+    sessionEndTime: {
+      type: DataTypes.TIME,
+      field: "session_end_time",
+    },
+
+    location: {
+      type: DataTypes.STRING,
+    },
+
+    virtualMeetingUrl: {
+      type: DataTypes.TEXT,
+      field: "virtual_meeting_url",
+    },
+
+    maxCapacity: {
+      type: DataTypes.INTEGER,
+      field: "max_capacity",
+    },
+
     isMandatory: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true
+      field: "is_mandatory",
     },
-    sessionDate: {
-      type: DataTypes.DATE
+
+    prerequisites: {
+      type: DataTypes.JSON,
     },
-    location: {
-      type: DataTypes.STRING
-    }
+
+    createdAt: {
+      type: DataTypes.DATE,
+      field: "created_at",
+    },
+
+    updatedAt: {
+      type: DataTypes.DATE,
+      field: "updated_at",
+    },
   },
   {
     sequelize,
     tableName: "modules",
-    timestamps: true
+    timestamps: true,
   }
 )
-
