@@ -1,6 +1,7 @@
 import request from "supertest"
 import app from "../src/app"
 import { Course } from "@lms/shared-db"
+import { title } from "node:process"
 
 jest.mock("@lms/shared-db", () => ({
   Course: {
@@ -50,6 +51,23 @@ describe("Course Controller", () => {
 
     expect(response.status).toBe(200)
     expect(response.body).toEqual(mockCourses)
+  })
+  it("should return 400 for invalid create data",async ()=>{
+    const response = (await request(app).post("/api/courses"))
+    expect(response.status).toBe(400);
+  })
+  it("should return 404 if updating not-existent course",async()=>{
+    ;(Course.findByPk as jest.Mock).mockResolvedValue(null)
+
+    const response=await request(app).put("/api/courses/999").send({title:"updated"})
+    expect(response.status).toBe(404)
+  })
+  it("should update existing course",async()=>{
+    const mockCourse={ update:jest.fn().mockResolvedValue(true)}
+    ;(Course.findByPk as jest.Mock).mockResolvedValue(mockCourse)
+
+    const response = await request(app).put("/api/courses/1").send({title:"updated"})
+    expect(response.status).toBe(200)
   })
 
 })

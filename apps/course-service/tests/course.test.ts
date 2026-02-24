@@ -1,4 +1,4 @@
-import { createCourseService, getAllCourses } from "../src/services/course.service"
+import { createCourseService, getAllCourses, updateCourseService } from "../src/services/course.service"
 import { Course } from "@lms/shared-db"
 
 jest.mock("@lms/shared-db", () => ({
@@ -44,6 +44,17 @@ describe("Course Service", () => {
 
     expect(Course.findAll).toHaveBeenCalledTimes(1)
     expect(result).toEqual(mockCourses)
+  })
+
+  it("should update course",async()=>{
+    const mockCourse={
+      update:jest.fn().mockResolvedValue(true)
+    };
+    (Course.findByPk as jest.Mock).mockResolvedValue(mockCourse)
+    const result = await updateCourseService(1,{title:"UPDATED"})
+
+    expect(Course.findByPk).toHaveBeenCalledWith(1)
+    expect(mockCourse.update).toHaveBeenCalled()
   })
 
 })

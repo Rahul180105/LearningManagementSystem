@@ -31,34 +31,6 @@ services:
     depends_on:
       - postgres
 
-  user-service:
-    build:
-      context: .
-      dockerfile: apps/user-service/Dockerfile
-    container_name: lms_user
-    restart: always
-    ports:
-      - "3002:3002"
-    environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: lms_user
-      DB_PASSWORD: lms_password
-      DB_NAME: lms_db
-    depends_on:
-      - postgres
-
-  web:
-    build:
-      context: .
-      dockerfile: apps/web/Dockerfile
-    container_name: lms_web
-    restart: always
-    ports:
-      - "5173:80"
-    depends_on:
-      - auth-service
-      - user-service
-
+  
 volumes:
   postgres_data:
