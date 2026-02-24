@@ -8,6 +8,7 @@ import { sequelize } from "../database";
 import { PasswordResetToken } from "./passwordResetToken.model";
 import { Course } from "./course.model";
 import { Module } from "./module.model";
+import { Enrollment } from "./enrollment.model";
 export * from './passwordResetToken.model';
 
 
@@ -51,5 +52,5 @@ Module.belongsTo(Course,{
     foreignKey:"courseId"
 })
 
-export {sequelize,User,Role,Permission,UserRole,RefreshToken,RolePermission,Course,Module};
+export {sequelize,User,Role,Permission,UserRole,RefreshToken,RolePermission,Course,Module,Enrollment};
 
