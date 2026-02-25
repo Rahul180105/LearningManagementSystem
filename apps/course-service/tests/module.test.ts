@@ -5,6 +5,7 @@ import {
   updateModuleService,
   deleteModuleService,
 } from "../src/services/module.service"
+import { CourseStatus, DifficultyLevel } from "@lms/shared-db/src/models/course.model"
 
 describe("Module Service", () => {
   let course: Course
@@ -15,8 +16,8 @@ describe("Module Service", () => {
     course = await Course.create({
       code: "TEST-101",
       title: "Test Course",
-      difficulty:"intermediate",
-      status: "draft",
+      difficulty:DifficultyLevel.BEGINNER,
+      status: CourseStatus.DRAFT,
     })
   })
 

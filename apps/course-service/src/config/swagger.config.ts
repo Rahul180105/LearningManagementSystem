@@ -16,24 +16,61 @@ const options: Options = {
     ],
     components: {
       schemas: {
-        Course: {
-          type: "object",
-          properties: {
-            id: { type: "number" },
-            code: { type: "string" },
-            title: { type: "string" },
-            description: { type: "string" },
-            status: {
-              type: "string",
-              enum: ["draft", "published", "archived"],
-            },
-            difficulty: {
-              type: "string",
-              enum: ["beginner", "intermediate", "advanced"],
-            },
-            estimatedHours: { type: "number" },
-          },
+        CourseResponse: {
+      type: "object",
+      properties: {
+        id: { type: "number" },
+        code: { type: "string" },
+        title: { type: "string" },
+        description: { type: "string" },
+        status: {
+          type: "string",
+          enum: ["draft", "published", "archived"]
         },
+        difficulty: {
+          type: "string",
+          enum: ["beginner", "intermediate", "advanced"]
+        },
+        estimatedHours: { type: "number" }
+      }
+    },
+
+    CreateCourseRequest: {
+      type: "object",
+      required: ["code", "title", "difficulty", "estimatedHours"],
+      properties: {
+        code: { type: "string" },
+        title: { type: "string" },
+        description: { type: "string" },
+        status: {
+          type: "string",
+          enum: ["draft", "published", "archived"]
+        },
+        difficulty: {
+          type: "string",
+          enum: ["beginner", "intermediate", "advanced"]
+        },
+        estimatedHours: { type: "number" }
+      }
+    },
+
+    UpdateCourseRequest: {
+      type: "object",
+      properties: {
+        code: { type: "string" },
+        title: { type: "string" },
+        description: { type: "string" },
+        status: {
+          type: "string",
+          enum: ["draft", "published", "archived"]
+        },
+        difficulty: {
+          type: "string",
+          enum: ["beginner", "intermediate", "advanced"]
+        },
+        estimatedHours: { type: "number" }
+      }
+    },
 
         Module: {
           type: "object",
@@ -56,3 +93,4 @@ const options: Options = {
 }
 
 export const swaggerSpec = swaggerJsdoc(options)
+

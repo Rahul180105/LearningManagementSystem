@@ -22,10 +22,14 @@ const router = Router();
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Course'
+ *             $ref: '#/components/schemas/CreateCourseRequest'
  *     responses:
  *       201:
  *         description: Course created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CourseResponse'
  */
 router.post("/", validate(createCourseSchema),createCourse);
 /**
@@ -37,6 +41,12 @@ router.post("/", validate(createCourseSchema),createCourse);
  *     responses:
  *       200:
  *         description: List of courses
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/CourseResponse'
  */
 router.get("/", getCourses);
 /**
@@ -54,6 +64,12 @@ router.get("/", getCourses);
  *     responses:
  *       200:
  *         description: Course details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CourseResponse'
+ *       404:
+ *         description: Course not found
  */
 router.get("/:id",getCourseById);
 /**
@@ -68,6 +84,21 @@ router.get("/:id",getCourseById);
  *         required: true
  *         schema:
  *           type: number
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateCourseRequest'
+ *     responses:
+ *       200:
+ *         description: Course updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CourseResponse'
+ *       404:
+ *         description: Course not found
  */
 router.put("/:id",validate(updateCourseSchema),updateCourse);
 
