@@ -8,7 +8,7 @@ import { sequelize } from "../database";
 import { PasswordResetToken } from "./passwordResetToken.model";
 import { Course } from "./course.model";
 import { Module } from "./module.model";
-import { Enrollment } from "./enrollment.model";
+import { Enrollment,EnrollmentStatus } from "./enrollment.model";
 export * from './passwordResetToken.model';
 
 
@@ -52,5 +52,22 @@ Module.belongsTo(Course,{
     foreignKey:"courseId"
 })
 
-export {sequelize,User,Role,Permission,UserRole,RefreshToken,RolePermission,Course,Module,Enrollment};
+Enrollment.belongsTo(Course,{
+    foreignKey:"courseId",
+    onDelete:"CASCADE"
+})
+Enrollment.belongsTo(User,{
+    foreignKey:"userId",
+    onDelete:"CASCADE"
+})
+Course.hasMany(Enrollment,{
+    foreignKey:"courseId",
+    onDelete:"CASCADE"
+})
+User.hasMany(Enrollment,{
+    foreignKey:"userId",
+    onDelete:"CASCADE"
+})
+
+export {sequelize,User,Role,Permission,UserRole,RefreshToken,RolePermission,Course,Module,Enrollment,EnrollmentStatus};
 
