@@ -32,6 +32,19 @@ const router = Router()
  *         required: true
  *         schema:
  *           type: number
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateModuleRequest'
+ *     responses:
+ *       201:
+ *         description: Module created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ModuleResponse'
  */
 router.post(
   "/courses/:id/modules",
@@ -45,6 +58,21 @@ router.post(
  *   get:
  *     summary: Get modules by course
  *     tags: [Modules]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: List of modules
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ModuleResponse'
  */
 router.get(
   "/courses/:id/modules",
@@ -56,6 +84,25 @@ router.get(
  *   put:
  *     summary: Update module
  *     tags: [Modules]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: number
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateModuleRequest'
+ *     responses:
+ *       200:
+ *         description: Module updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ModuleResponse'
  */
 router.put(
   "/modules/:id",
@@ -68,6 +115,15 @@ router.put(
  *   delete:
  *     summary: Delete module
  *     tags: [Modules]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: Module deleted
  */
 router.delete("/modules/:id", deleteModule)
 

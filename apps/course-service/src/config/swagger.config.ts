@@ -72,20 +72,74 @@ const options: Options = {
       }
     },
 
-        Module: {
-          type: "object",
-          properties: {
-            id: { type: "number" },
-            courseId: { type: "number" },
-            title: { type: "string" },
-            moduleType: {
-              type: "string",
-              enum: ["online", "offline"],
-            },
-            sequenceOrder: { type: "number" },
-            estimatedMinutes: { type: "number" },
-          },
-        },
+        ModuleResponse: {
+  type: "object",
+  properties: {
+    id: { type: "number" },
+    courseId: { type: "number" },
+    title: { type: "string" },
+    description: { type: "string" },
+    moduleType: {
+      type: "string",
+      enum: ["online", "offline"]
+    },
+    contentType: {
+      type: "string",
+      enum: ["video", "document", "link"]
+    },
+    contentUrl: { type: "string" },
+    sequenceOrder: { type: "number" },
+    estimatedMinutes: { type: "number" },
+    isMandatory: { type: "boolean" },
+    sessionDate: { type: "string" },
+    location: { type: "string" }
+  }
+},
+
+CreateModuleRequest: {
+  type: "object",
+  required: ["title", "moduleType", "sequenceOrder"],
+  properties: {
+    title: { type: "string" },
+    description: { type: "string" },
+    moduleType: {
+      type: "string",
+      enum: ["online", "offline"]
+    },
+    contentType: {
+      type: "string",
+      enum: ["video", "document", "link"]
+    },
+    contentUrl: { type: "string" },
+    sequenceOrder: { type: "number" },
+    estimatedMinutes: { type: "number" },
+    isMandatory: { type: "boolean" },
+    sessionDate: { type: "string" },
+    location: { type: "string" }
+  }
+},
+
+UpdateModuleRequest: {
+  type: "object",
+  properties: {
+    title: { type: "string" },
+    description: { type: "string" },
+    moduleType: {
+      type: "string",
+      enum: ["online", "offline"]
+    },
+    contentType: {
+      type: "string",
+      enum: ["video", "document", "link"]
+    },
+    contentUrl: { type: "string" },
+    sequenceOrder: { type: "number" },
+    estimatedMinutes: { type: "number" },
+    isMandatory: { type: "boolean" },
+    sessionDate: { type: "string" },
+    location: { type: "string" }
+  }
+},
       },
     },
   },
