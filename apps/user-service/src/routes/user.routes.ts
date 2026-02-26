@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { UserController } from '../controllers/user.controller';
-import { authenticate } from '../../../auth-service/src/middleware/auth.middleware';
-import { authorize } from '../middlewares/permission.middleware';
+import { authenticate,authorize } from '@lms/shared-auth';
+
 
 const router: Router = Router();
 const controller = new UserController();
