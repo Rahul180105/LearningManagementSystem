@@ -1,7 +1,7 @@
-
 version: "3.9"
 
 services:
+
   auth-service:
     build:
       context: .
@@ -20,6 +20,82 @@ services:
     depends_on:
       - postgres
 
+  user-service:
+    build:
+      context: .
+      dockerfile: apps/user-service/Dockerfile
+    container_name: lms_user
+    restart: always
+    ports:
+      - "3002:3002"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: lms_user
+      DB_PASSWORD: lms_password
+      DB_NAME: lms_db
+      JWT_SECRET: supersecret
+    depends_on:
+      - postgres
+
+
+  course-service:
+    build:
+      context: .
+      dockerfile: apps/course-service/Dockerfile
+    container_name: lms_course
+    restart: always
+    ports:
+      - "3003:3003"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: lms_user
+      DB_PASSWORD: lms_password
+      DB_NAME: lms_db
+      JWT_SECRET: supersecret
+    depends_on:
+      - postgres
+
+
+  enrollment-service:
+    build:
+      context: .
+      dockerfile: apps/enrollment-service/Dockerfile
+    container_name: lms_enrollment
+    restart: always
+    ports:
+      - "3004:3004"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: lms_user
+      DB_PASSWORD: lms_password
+      DB_NAME: lms_db
+      JWT_SECRET: supersecret
+    depends_on:
+      - postgres
+
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: lms_web
+    restart: always
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_AUTH_BASE: http://localhost:3001/api
+      VITE_USER_BASE: http://localhost:3002/api
+      VITE_COURSE_BASE: http://localhost:3003/api
+      VITE_ENROLL_BASE: http://localhost:3004/api
+    depends_on:
+      - auth-service
+      - user-service
+      - course-service
+      - enrollment-service
+
   postgres:
     image: postgres:15
     container_name: lms_postgres
@@ -32,6 +108,6 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-  
+
 volumes:
   postgres_data:
