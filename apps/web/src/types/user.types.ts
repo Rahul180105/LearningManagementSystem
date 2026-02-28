@@ -6,6 +6,7 @@ export interface User{
     last_name:string;
     status:string;
     roles:string[];
+    department:string;
 }
 export interface Role {
     id:number;

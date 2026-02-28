@@ -1,50 +1,32 @@
 import { create } from "zustand"
-import { api, AUTH_BASE } from "@/lib/apiClient"
+import { jwtDecode } from "jwt-decode"
 
-interface User {
-  id: number
-  first_name: string
-  last_name: string
-  username: string
+interface UserPayload {
+  userId: number
   email: string
-  roles?: string[]
+  roles: string[]
 }
 
 interface AuthState {
-  user: User | null
+  user: UserPayload | null
   accessToken: string | null
-  login: (email: string, password: string) => Promise<void>
-  fetchUser: () => Promise<void>
+  login: (token: string) => void
   logout: () => void
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
-  accessToken: localStorage.getItem("accessToken"),
+  accessToken: null,
 
-  login: async (email, password) => {
-    const res = await api.post(`${AUTH_BASE}/auth/login`, {
-      email,
-      password,
+  login: (token) => {
+    const decoded = jwtDecode<UserPayload>(token)
+
+    localStorage.setItem("accessToken", token)
+
+    set({
+      user: decoded,
+      accessToken: token,
     })
-
-    const { accessToken } = res.data
-
-    localStorage.setItem("accessToken", accessToken)
-
-    set({ accessToken })
-
-    await useAuthStore.getState().fetchUser()
-  },
-
-  fetchUser: async () => {
-    const res = await api.get(`${AUTH_BASE}/auth/me`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    })
-
-    set({ user: res.data })
   },
 
   logout: () => {

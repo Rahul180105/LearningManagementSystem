@@ -1,40 +1,58 @@
-import {createBrowserRouter} from "react-router-dom";
-import Login from  '@/features/auth/pages/Login';
-import Dashboard from "@/features/dashboard/Dashboard";
-import { ProtectedRoute } from "./ProtectedRoute";
-import DashboardLayout from "@/layouts/DashboardLayout";
-import Register from "@/features/auth/pages/Register";
-import ForgotPassword from "@/features/auth/pages/ForgotPassword";
-import ResetPassword from "@/features/auth/pages/ResetPassword";
-import { Navigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom"
+import Layout from "./layout/Layout"
+import { ProtectedRoute } from "./layout/ProtectedRoute"
+
+import LoginPage from "@/features/auth/pages/LoginPage"
+import RegisterPage from "@/features/auth/pages/RegisterPage"
+import ForgotPasswordPage from "@/features/auth/pages/ForgotPasswordPage"
+import ResetPasswordPage from "@/features/auth/pages/ResetPasswordPage"
+
+import DashboardPage from "@/features/dashboard/DashboardPage"
+// (UsersPage will be added later)
 
 export const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Navigate to="/login" replace />,
-  },
+  // 🔓 Public Routes
   {
     path: "/login",
-    element: <Login />,
+    element: <LoginPage />,
   },
   {
     path: "/register",
-    element: <Register />,
+    element: <RegisterPage />,
   },
   {
     path: "/forgot-password",
-    element: <ForgotPassword />,
+    element: <ForgotPasswordPage />,
   },
   {
     path: "/reset-password",
-    element: <ResetPassword />,
+    element: <ResetPasswordPage />,
   },
+
+  // 🔐 Protected Layout Routes
   {
-    path: "/dashboard",
+    path: "/",
     element: (
       <ProtectedRoute>
-        <DashboardLayout />
+        <Layout />
       </ProtectedRoute>
     ),
+    children: [
+      {
+        path: "dashboard",
+        element: <DashboardPage />,
+      },
+      // Future:
+      // {
+      //   path: "users",
+      //   element: <UsersPage />,
+      // },
+    ],
+  },
+
+  // Optional: redirect unknown routes to login
+  {
+    path: "*",
+    element: <LoginPage />,
   },
 ])
