@@ -1,6 +1,6 @@
 import { AuthService } from '../../../src/services/auth.service';
 import { PasswordService } from '../../../src/services/password.service';
-import { JWTService } from '../../../src/services/jwt.service';
+import { JWTService } from '@lms/shared-auth';
 import { sequelize,Role } from '@lms/shared-db';
 import '@lms/shared-db';
 

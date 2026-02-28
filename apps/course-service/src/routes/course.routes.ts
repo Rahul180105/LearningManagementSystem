@@ -2,6 +2,7 @@ import { Router } from "express";
 import { createCourse,getCourseById,getCourses,updateCourse } from "../controllers/course.controller.ts";
 import { validate } from "../middlewares/validate.middleware.ts";
 import { createCourseSchema,updateCourseSchema } from "../validators/course.validator.ts";
+import {authorize,authenticate} from "@lms/shared-auth";
 
 const router = Router();
 /**
@@ -31,7 +32,7 @@ const router = Router();
  *             schema:
  *               $ref: '#/components/schemas/CourseResponse'
  */
-router.post("/", validate(createCourseSchema),createCourse);
+router.post("/",authenticate,validate(createCourseSchema),createCourse);
 /**
  * @swagger
  * /api/courses:
@@ -48,7 +49,7 @@ router.post("/", validate(createCourseSchema),createCourse);
  *               items:
  *                 $ref: '#/components/schemas/CourseResponse'
  */
-router.get("/", getCourses);
+router.get("/",authenticate, getCourses);
 /**
  * @swagger
  * /api/courses/{id}:
@@ -100,6 +101,6 @@ router.get("/:id",getCourseById);
  *       404:
  *         description: Course not found
  */
-router.put("/:id",validate(updateCourseSchema),updateCourse);
+router.put("/:id",authenticate,validate(updateCourseSchema),updateCourse);
 
 export default router;

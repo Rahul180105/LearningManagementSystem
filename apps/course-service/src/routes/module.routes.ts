@@ -10,6 +10,7 @@ import {
   createModuleSchema,
   updateModuleSchema,
 } from "../validators/module.validator.ts"
+import { authenticate, authorize } from "@lms/shared-auth"
 
 const router = Router()
 
@@ -47,7 +48,7 @@ const router = Router()
  *               $ref: '#/components/schemas/ModuleResponse'
  */
 router.post(
-  "/courses/:id/modules",
+  "/courses/:id/modules",authenticate,
   validate(createModuleSchema),
   createModule
 )
@@ -106,7 +107,7 @@ router.get(
  */
 router.put(
   "/modules/:id",
-  validate(updateModuleSchema),
+  validate(updateModuleSchema),authenticate,
   updateModule
 )
 /**
@@ -125,6 +126,6 @@ router.put(
  *       200:
  *         description: Module deleted
  */
-router.delete("/modules/:id", deleteModule)
+router.delete("/modules/:id",authenticate, deleteModule)
 
 export default router

@@ -23,7 +23,8 @@
     "pg": "^8.18.0",
     "sequelize": "^6.37.7",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "prettier": "^3.8.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

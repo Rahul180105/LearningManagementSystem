@@ -11,5 +11,5 @@ COPY packages ./packages
 
 RUN pnpm install
 
-EXPOSE 3002
-CMD ["pnpm","--filter","user-service","dev"]
+EXPOSE 3003
+CMD ["pnpm","--filter","course-service","dev"]

@@ -4,6 +4,7 @@ import {
   listEnrollments,
   deleteEnrollment
 } from "../controllers/enrollment.controller"
+import {authorize,authenticate} from "@lms/shared-auth";
 
 const router:any = Router()
 

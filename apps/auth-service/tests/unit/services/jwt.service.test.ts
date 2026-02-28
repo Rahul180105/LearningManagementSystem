@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import {JWTService} from '../../../src/services/jwt.service.ts'
+import {JWTService} from '@lms/shared-auth'
 import { email } from 'zod';
 
 describe('JWTService',()=>{

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { AuthController } from '../controllers/auth.controller';
-import { authenticate } from '../middleware/auth.middleware';
+import { authenticate } from '@lms/shared-auth';
 import { validate } from '../middleware/validation.middleware';
 import { registerSchema,loginSchema,refreshSchema } from '../validators/auth.validator';
 

@@ -8,6 +8,8 @@ import ForgotPasswordPage from "@/features/auth/pages/ForgotPasswordPage"
 import ResetPasswordPage from "@/features/auth/pages/ResetPasswordPage"
 
 import DashboardPage from "@/features/dashboard/DashboardPage"
+import UsersPage from "@/features/users/UsersPage"
+import ProfilePage from "@/features/profile/ProfilePage"
 // (UsersPage will be added later)
 
 export const router = createBrowserRouter([
@@ -55,4 +57,12 @@ export const router = createBrowserRouter([
     path: "*",
     element: <LoginPage />,
   },
+  {
+    path:"profile",
+    element:<ProfilePage/>
+  },
+  {
+    path:"users",
+    element:<UsersPage/>
+  }
 ])

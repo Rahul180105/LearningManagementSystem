@@ -1,111 +1,83 @@
 import { UserService } from '../../../src/services/user.service';
-import { User, Role, sequelize } from '@lms/shared-db';
+import { User, Role } from '@lms/shared-db';
 
-beforeAll(async () => {
-  await sequelize.sync({ force: true });
-
-  await Role.create({ name: 'admin' });
-  await Role.create({ name: 'employee' });
-});
-
-afterAll(async () => {
-  await sequelize.close();
-});
-
-beforeEach(async () => {
-  await User.destroy({ where: {}, truncate: true, cascade: true });
-});
+jest.mock('@lms/shared-db');
 
 describe('UserService', () => {
   let userService: UserService;
 
   beforeEach(() => {
     userService = new UserService();
+    jest.clearAllMocks();
   });
 
   it('should return all users', async () => {
-    await User.create({
-      email: 'user1@test.com',
-      username: 'user1',
-      password_hash: 'hashed',
-      first_name: 'User',
-      last_name: 'One',
-      department: 'IT',
-      status: 'active',
-    });
+    (User.findAll as jest.Mock).mockResolvedValue([{ id: 1 }]);
 
     const users = await userService.getAllUsers();
+
+    expect(User.findAll).toHaveBeenCalled();
     expect(users.length).toBe(1);
   });
 
   it('should return user by id', async () => {
-    const user = await User.create({
-      email: 'user2@test.com',
-      username: 'user2',
-      password_hash: 'hashed',
-      first_name: 'User',
-      last_name: 'Two',
-      department: 'IT',
-      status: 'active',
+    (User.findByPk as jest.Mock).mockResolvedValue({
+      id: 1,
+      email: 'user@test.com',
     });
 
-    const found = await userService.getUserById(user.id);
-    expect(found.email).toBe('user2@test.com');
+    const user = await userService.getUserById(1);
+
+    expect(User.findByPk).toHaveBeenCalledWith(1, { include: [Role] });
+    expect(user.email).toBe('user@test.com');
   });
 
   it('should update user', async () => {
-    const user = await User.create({
-      email: 'update@test.com',
-      username: 'update',
-      password_hash: 'hashed',
-      first_name: 'Old',
-      last_name: 'Name',
-      department: 'IT',
-      status: 'active',
+    const updateMock = jest.fn();
+
+    (User.findByPk as jest.Mock).mockResolvedValue({
+      update: updateMock,
     });
 
-    await userService.updateUser(user.id, {
-      first_name: 'New',
-    });
+    await userService.updateUser(1, { first_name: 'New' });
 
-    const updated = await User.findByPk(user.id);
-    expect(updated?.first_name).toBe('New');
+    expect(updateMock).toHaveBeenCalledWith({ first_name: 'New' });
   });
 
   it('should soft delete user', async () => {
-    const user = await User.create({
-      email: 'delete@test.com',
-      username: 'delete',
-      password_hash: 'hashed',
-      first_name: 'Delete',
-      last_name: 'Me',
-      department: 'IT',
-      status: 'active',
+    const updateMock = jest.fn();
+
+    (User.findByPk as jest.Mock).mockResolvedValue({
+      update: updateMock,
     });
 
-    await userService.deleteUser(user.id);
+    await userService.deleteUser(1);
 
-    const deleted = await User.findByPk(user.id);
-    expect(deleted?.status).toBe('inactive');
+    expect(updateMock).toHaveBeenCalledWith({ status: 'inactive' });
   });
 
+
   it('should assign role to user', async () => {
-    const role = await Role.findOne({ where: { name: 'admin' } });
+    const addRoleMock = jest.fn();
 
-    const user = await User.create({
-      email: 'role@test.com',
-      username: 'roleuser',
-      password_hash: 'hashed',
-      first_name: 'Role',
-      last_name: 'User',
-      department: 'IT',
-      status: 'active',
-    });
+    const mockUser: any = {
+      addRole: addRoleMock,
+    };
 
-    await userService.assignRole(user.id, role!.id);
+    (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
+    (Role.findByPk as jest.Mock).mockResolvedValue({ id: 2 });
 
-    const roles = await (user as any).getRoles();
-    expect(roles.length).toBe(1);
-    expect(roles[0].name).toBe('admin');
+    await userService.assignRole(1, 2);
+
+    expect(addRoleMock).toHaveBeenCalledWith({ id: 2 });
+  });
+
+  it('should throw if user not found in assignRole', async () => {
+    (User.findByPk as jest.Mock).mockResolvedValue(null);
+    (Role.findByPk as jest.Mock).mockResolvedValue({ id: 2 });
+
+    await expect(
+      userService.assignRole(1, 2)
+    ).rejects.toThrow();
   });
 });
